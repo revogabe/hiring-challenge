@@ -32,7 +32,7 @@ export default function EquipmentPage() {
   );
   const [filters, setFilters] = useState({
     name: "",
-    areaId: "",
+    areasIDs: "",
     manufacturer: "",
   });
   const queryClient = useQueryClient();
@@ -48,6 +48,8 @@ export default function EquipmentPage() {
   const { data: areas, isLoading: areasLoading } = useQuery("areas", () =>
     areaApi.getAll().then((res) => res.data)
   );
+
+  console.log(equipment);
 
   // Set initial area filter if areaId is provided
   useEffect(() => {
@@ -66,6 +68,11 @@ export default function EquipmentPage() {
         setIsModalVisible(false);
         form.resetFields();
       },
+      onError: (error: any) => {
+        message.error(
+          error.response?.data?.message || "Failed to create equipment"
+        );
+      },
     }
   );
 
@@ -80,6 +87,11 @@ export default function EquipmentPage() {
         form.resetFields();
         setEditingEquipment(null);
       },
+      onError: (error: any) => {
+        message.error(
+          error.response?.data?.message || "Failed to update equipment"
+        );
+      },
     }
   );
 
@@ -88,13 +100,20 @@ export default function EquipmentPage() {
       queryClient.invalidateQueries("equipment");
       message.success("Equipment deleted successfully");
     },
+    onError: (error: any) => {
+      message.error(
+        error.response?.data?.message || "Failed to delete equipment"
+      );
+    },
   });
 
   const filteredEquipment = equipment?.filter((eq) => {
     const nameMatch = eq.name
       .toLowerCase()
       .includes(filters.name.toLowerCase());
-    const areaMatch = !filters.areaId || eq.areaId === filters.areaId;
+    const areaMatch =
+      !filters.areasIDs ||
+      eq.areas?.some((area) => area.id === filters.areasIDs);
     const manufacturerMatch = eq.manufacturer
       .toLowerCase()
       .includes(filters.manufacturer.toLowerCase());
@@ -129,10 +148,38 @@ export default function EquipmentPage() {
         dayjs(b.initialOperationsDate).unix(),
     },
     {
-      title: "Area",
-      dataIndex: ["area", "name"],
-      key: "area",
-      sorter: (a, b) => (a.area?.name || "").localeCompare(b.area?.name || ""),
+      title: "Areas",
+      dataIndex: ["areas", "name"],
+      key: "areas",
+      render: (_, record) => (
+        <span
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+            gap: 8,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {record.areas?.map((area: Area) => (
+            <span
+              key={area.id}
+              title={area.name}
+              style={{
+                backgroundColor: "#f0f0f0",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {area.name}
+            </span>
+          ))}
+        </span>
+      ),
     },
     {
       title: "Actions",
@@ -187,8 +234,8 @@ export default function EquipmentPage() {
             style={{ width: 200 }}
             placeholder="Filter by area"
             allowClear
-            value={filters.areaId || undefined}
-            onChange={(value) => setFilters({ ...filters, areaId: value })}
+            value={filters.areasIDs || undefined}
+            onChange={(value) => setFilters({ ...filters, areasIDs: value })}
           >
             {areas?.map((area) => (
               <Select.Option key={area.id} value={area.id}>
@@ -300,11 +347,21 @@ export default function EquipmentPage() {
           </Form.Item>
 
           <Form.Item
-            name="areaId"
-            label="Area"
-            rules={[{ required: true, message: "Please select an area!" }]}
+            name="areaIDs"
+            label="Areas"
+            rules={[
+              { required: true, message: "Please select at least one area!" },
+            ]}
           >
-            <Select>
+            <Select
+              mode="multiple"
+              defaultValue={editingEquipment?.areas?.map((area) => area.id)}
+              placeholder="Select areas for this equipment"
+              style={{ width: "100%" }}
+              optionFilterProp="children"
+              showSearch
+              allowClear
+            >
               {areas?.map((area) => (
                 <Select.Option key={area.id} value={area.id}>
                   {area.name}
