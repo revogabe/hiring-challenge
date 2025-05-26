@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -23,6 +23,7 @@ export interface Area {
   locationDescription: string;
   plantId: string;
   plant?: Plant;
+  neighbors?: Area[];
   createdAt: string;
   updatedAt: string;
 }
@@ -33,8 +34,7 @@ export interface Equipment {
   manufacturer: string;
   serialNumber: string;
   initialOperationsDate: string;
-  areaId: string;
-  area?: Area;
+  areas?: Area[];
   createdAt: string;
   updatedAt: string;
 }
@@ -43,7 +43,7 @@ export enum PartType {
   ELECTRIC = "electric",
   ELECTRONIC = "electronic",
   MECHANICAL = "mechanical",
-  HYDRAULICAL = "hydraulical"
+  HYDRAULICAL = "hydraulical",
 }
 
 export interface Part {
@@ -60,38 +60,49 @@ export interface Part {
 }
 
 export const plantApi = {
-  getAll: () => api.get<Plant[]>('/plants'),
+  getAll: () => api.get<Plant[]>("/plants"),
   getById: (id: string) => api.get<Plant>(`/plants/${id}`),
-  create: (data: Omit<Plant, 'id' | 'createdAt' | 'updatedAt'>) => api.post<Plant>('/plants', data),
-  update: (id: string, data: Partial<Omit<Plant, 'id' | 'createdAt' | 'updatedAt'>>) =>
-    api.put<Plant>(`/plants/${id}`, data),
+  create: (data: Omit<Plant, "id" | "createdAt" | "updatedAt">) =>
+    api.post<Plant>("/plants", data),
+  update: (
+    id: string,
+    data: Partial<Omit<Plant, "id" | "createdAt" | "updatedAt">>
+  ) => api.put<Plant>(`/plants/${id}`, data),
   delete: (id: string) => api.delete(`/plants/${id}`),
 };
 
 export const areaApi = {
-  getAll: () => api.get<Area[]>('/areas'),
+  getAll: () => api.get<Area[]>("/areas"),
   getById: (id: string) => api.get<Area>(`/areas/${id}`),
-  create: (data: Omit<Area, 'id' | 'createdAt' | 'updatedAt'>) => api.post<Area>('/areas', data),
-  update: (id: string, data: Partial<Omit<Area, 'id' | 'createdAt' | 'updatedAt'>>) =>
-    api.put<Area>(`/areas/${id}`, data),
+  create: (data: Omit<Area, "id" | "createdAt" | "updatedAt">) =>
+    api.post<Area>("/areas", data),
+  update: (
+    id: string,
+    data: Partial<Omit<Area, "id" | "createdAt" | "updatedAt">>
+  ) => api.put<Area>(`/areas/${id}`, data),
   delete: (id: string) => api.delete(`/areas/${id}`),
 };
 
 export const equipmentApi = {
-  getAll: () => api.get<Equipment[]>('/equipment'),
+  getAll: () => api.get<Equipment[]>("/equipment"),
   getById: (id: string) => api.get<Equipment>(`/equipment/${id}`),
-  create: (data: Omit<Equipment, 'id' | 'createdAt' | 'updatedAt'>) =>
-    api.post<Equipment>('/equipment', data),
-  update: (id: string, data: Partial<Omit<Equipment, 'id' | 'createdAt' | 'updatedAt'>>) =>
-    api.put<Equipment>(`/equipment/${id}`, data),
+  create: (data: Omit<Equipment, "id" | "createdAt" | "updatedAt">) =>
+    api.post<Equipment>("/equipment", data),
+  update: (
+    id: string,
+    data: Partial<Omit<Equipment, "id" | "createdAt" | "updatedAt">>
+  ) => api.put<Equipment>(`/equipment/${id}`, data),
   delete: (id: string) => api.delete(`/equipment/${id}`),
 };
 
 export const partApi = {
-  getAll: () => api.get<Part[]>('/parts'),
+  getAll: () => api.get<Part[]>("/parts"),
   getById: (id: string) => api.get<Part>(`/parts/${id}`),
-  create: (data: Omit<Part, 'id' | 'createdAt' | 'updatedAt'>) => api.post<Part>('/parts', data),
-  update: (id: string, data: Partial<Omit<Part, 'id' | 'createdAt' | 'updatedAt'>>) =>
-    api.put<Part>(`/parts/${id}`, data),
+  create: (data: Omit<Part, "id" | "createdAt" | "updatedAt">) =>
+    api.post<Part>("/parts", data),
+  update: (
+    id: string,
+    data: Partial<Omit<Part, "id" | "createdAt" | "updatedAt">>
+  ) => api.put<Part>(`/parts/${id}`, data),
   delete: (id: string) => api.delete(`/parts/${id}`),
-}; 
+};
