@@ -1,36 +1,45 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  OneToMany,
+  JoinTable,
+} from "typeorm";
 import { Area } from "./Area";
 import { Part } from "./Part";
 
 @Entity()
 export class Equipment {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
-    @Column()
-    name!: string;
+  @Column()
+  name!: string;
 
-    @Column()
-    manufacturer!: string;
+  @Column()
+  manufacturer!: string;
 
-    @Column()
-    serialNumber!: string;
+  @Column()
+  serialNumber!: string;
 
-    @Column({ type: "date" })
-    initialOperationsDate!: Date;
+  @Column({ type: "date" })
+  initialOperationsDate!: Date;
 
-    @ManyToOne(() => Area, area => area.equipment)
-    area?: Area;
+  @ManyToMany(() => Area)
+  @JoinTable({
+    name: "area_equipment",
+    joinColumn: { name: "equipment_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "area_id", referencedColumnName: "id" },
+  })
+  areas?: Area[];
 
-    @Column()
-    areaId!: string;
+  @OneToMany(() => Part, (part) => part.equipment)
+  parts?: Part[];
 
-    @OneToMany(() => Part, part => part.equipment)
-    parts?: Part[];
+  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
+  createdAt!: Date;
 
-    @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
-    createdAt!: Date;
-
-    @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
-    updatedAt!: Date;
-} 
+  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
+  updatedAt!: Date;
+}
