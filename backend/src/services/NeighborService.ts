@@ -115,20 +115,4 @@ export class NeighborService {
 
     return area.neighbors || [];
   }
-
-  public async areNeighbors(
-    areaId: string,
-    otherAreaId: string
-  ): Promise<boolean> {
-    const area = await this.areaRepository.findOne({
-      where: { id: areaId },
-      relations: ["neighbors"],
-    });
-
-    if (!area || !area.neighbors) {
-      return false;
-    }
-
-    return area.neighbors.some((neighbor) => neighbor.id === otherAreaId);
-  }
 }

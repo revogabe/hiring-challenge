@@ -43,9 +43,8 @@ const FormModal: React.FC<FormModalProps> = ({
   };
 
   const handleFinish = (values: any) => {
-    // Convert date fields to ISO string
     const processedValues = Object.entries(values).reduce(
-      (acc, [key, value]) => {
+      (acc, [key, value]: [string, any]) => {
         if (
           value instanceof Date ||
           (value && typeof value.toISOString === "function")
@@ -63,13 +62,7 @@ const FormModal: React.FC<FormModalProps> = ({
   };
 
   return (
-    <Modal
-      title={title}
-      open={visible}
-      onCancel={handleCancel}
-      footer={null}
-      destroyOnClose
-    >
+    <Modal title={title} open={visible} onCancel={handleCancel} footer={null}>
       <Form
         form={form}
         layout="vertical"

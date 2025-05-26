@@ -49,8 +49,6 @@ export default function EquipmentPage() {
     areaApi.getAll().then((res) => res.data)
   );
 
-  console.log(equipment);
-
   // Set initial area filter if areaId is provided
   useEffect(() => {
     if (areaId) {
@@ -69,9 +67,7 @@ export default function EquipmentPage() {
         form.resetFields();
       },
       onError: (error: any) => {
-        message.error(
-          error.response?.data?.message || "Failed to create equipment"
-        );
+        message.error(`Failed to create equipment: ${error.message}`);
       },
     }
   );
@@ -84,13 +80,11 @@ export default function EquipmentPage() {
         queryClient.invalidateQueries("equipment");
         message.success("Equipment updated successfully");
         setIsModalVisible(false);
-        form.resetFields();
         setEditingEquipment(null);
+        form.resetFields();
       },
       onError: (error: any) => {
-        message.error(
-          error.response?.data?.message || "Failed to update equipment"
-        );
+        message.error(`Failed to update equipment: ${error.message}`);
       },
     }
   );
@@ -355,8 +349,8 @@ export default function EquipmentPage() {
           >
             <Select
               mode="multiple"
-              defaultValue={editingEquipment?.areas?.map((area) => area.id)}
               placeholder="Select areas for this equipment"
+              defaultValue={form.getFieldValue(["areaIDs"]) || []}
               style={{ width: "100%" }}
               optionFilterProp="children"
               showSearch

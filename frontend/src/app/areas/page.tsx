@@ -26,7 +26,11 @@ export default function AreasPage() {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingArea, setEditingArea] = useState<Area | null>(null);
-  const [filters, setFilters] = useState({ name: "", plantId: "" });
+  const [filters, setFilters] = useState({
+    name: "",
+    plantId: "",
+    neighbors: "",
+  });
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -39,6 +43,12 @@ export default function AreasPage() {
   const { data: plants, isLoading: plantsLoading } = useQuery("plants", () =>
     plantApi.getAll().then((res) => res.data)
   );
+
+  const filterAreaByPlant = (areas: Area[] | undefined, plantId: string) => {
+    if (!areas) return [];
+    if (!plantId) return areas;
+    return areas.filter((area) => area.plantId === plantId);
+  };
 
   // Set initial plant filter if plantId is provided
   useEffect(() => {
@@ -57,6 +67,9 @@ export default function AreasPage() {
         setIsModalVisible(false);
         form.resetFields();
       },
+      onError: (error: any) => {
+        message.error(`Failed to create area: ${error.message}`);
+      },
     }
   );
 
@@ -68,8 +81,11 @@ export default function AreasPage() {
         queryClient.invalidateQueries("areas");
         message.success("Area updated successfully");
         setIsModalVisible(false);
-        form.resetFields();
         setEditingArea(null);
+        form.resetFields();
+      },
+      onError: (error: any) => {
+        message.error(`Failed to update area: ${error.message}`);
       },
     }
   );
@@ -109,6 +125,40 @@ export default function AreasPage() {
         (a.plant?.name || "").localeCompare(b.plant?.name || ""),
     },
     {
+      title: "Neighboring Areas",
+      dataIndex: "neighbors",
+      key: "neighbors",
+      render: (_, record) => (
+        <span
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+            gap: 8,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {record.neighbors?.map((area: Area) => (
+            <span
+              key={area.id}
+              title={area.name}
+              style={{
+                backgroundColor: "#f0f0f0",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {area.name}
+            </span>
+          ))}
+        </span>
+      ),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
@@ -116,8 +166,8 @@ export default function AreasPage() {
           <Button
             icon={<EditOutlined />}
             onClick={() => {
-              setEditingArea(record);
               form.setFieldsValue(record);
+              setEditingArea(record);
               setIsModalVisible(true);
             }}
           />
@@ -196,11 +246,13 @@ export default function AreasPage() {
       <Modal
         title={editingArea ? "Edit Area" : "Add Area"}
         open={isModalVisible}
+        afterOpenChange={() => form.resetFields(["neighborIDs"])}
         onCancel={() => {
-          setIsModalVisible(false);
           form.resetFields();
+          setIsModalVisible(false);
           setEditingArea(null);
         }}
+        destroyOnHidden
         footer={null}
       >
         <Form
@@ -246,6 +298,29 @@ export default function AreasPage() {
                   {plant.name}
                 </Select.Option>
               ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="neighborIDs"
+            label="Neighboring Areas"
+            initialValue={editingArea?.neighbors?.map((area) => area.id) || []}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select neighboring areas"
+              style={{ width: "100%" }}
+              optionFilterProp="children"
+              showSearch
+              allowClear
+            >
+              {filterAreaByPlant(areas, form.getFieldValue(["plantId"]))?.map(
+                (area) => (
+                  <Select.Option key={area.id} value={area.id}>
+                    {area.name}
+                  </Select.Option>
+                )
+              )}
             </Select>
           </Form.Item>
 

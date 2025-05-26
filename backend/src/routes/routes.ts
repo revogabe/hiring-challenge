@@ -43,6 +43,7 @@ const models: TsoaRoute.Models = {
             "plantId": {"dataType":"string","required":true},
             "equipment": {"dataType":"array","array":{"dataType":"refObject","ref":"Equipment"}},
             "neighbors": {"dataType":"array","array":{"dataType":"refObject","ref":"Area"}},
+            "neighborIDs": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "updatedAt": {"dataType":"datetime","required":true},
         },
@@ -756,7 +757,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAreaController_createArea: Record<string, TsoaRoute.ParameterSchema> = {
-                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"Pick_Area.name-or-locationDescription-or-plantId_"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"intersection","subSchemas":[{"ref":"Pick_Area.name-or-locationDescription-or-plantId_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIDs":{"dataType":"array","array":{"dataType":"string"}}}}]},
         };
         app.post('/areas',
             ...(fetchMiddlewares<RequestHandler>(AreaController)),
@@ -787,7 +788,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAreaController_updateArea: Record<string, TsoaRoute.ParameterSchema> = {
                 areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
-                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"Partial_Pick_Area.name-or-locationDescription-or-plantId__"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"intersection","subSchemas":[{"ref":"Partial_Pick_Area.name-or-locationDescription-or-plantId__"},{"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIDs":{"dataType":"array","array":{"dataType":"string"}}}}]},
         };
         app.put('/areas/:areaId',
             ...(fetchMiddlewares<RequestHandler>(AreaController)),

@@ -46,7 +46,10 @@ export class AreaController extends Controller {
 
   @Post()
   public async createArea(
-    @Body() requestBody: Pick<Area, "name" | "locationDescription" | "plantId">
+    @Body()
+    requestBody: Pick<Area, "name" | "locationDescription" | "plantId"> & {
+      neighborIDs?: string[];
+    }
   ): Promise<Area> {
     try {
       return await this.areaService.create(requestBody);
@@ -67,7 +70,11 @@ export class AreaController extends Controller {
   public async updateArea(
     @Path() areaId: string,
     @Body()
-    requestBody: Partial<Pick<Area, "name" | "locationDescription" | "plantId">>
+    requestBody: Partial<
+      Pick<Area, "name" | "locationDescription" | "plantId">
+    > & {
+      neighborIDs?: string[];
+    }
   ): Promise<Area> {
     try {
       return await this.areaService.update(areaId, requestBody);

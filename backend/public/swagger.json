@@ -72,6 +72,12 @@
 						},
 						"type": "array"
 					},
+					"neighborIDs": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -86,6 +92,7 @@
 					"name",
 					"locationDescription",
 					"plantId",
+					"neighborIDs",
 					"createdAt",
 					"updatedAt"
 				],
@@ -1080,7 +1087,22 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Pick_Area.name-or-locationDescription-or-plantId_"
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/Pick_Area.name-or-locationDescription-or-plantId_"
+									},
+									{
+										"properties": {
+											"neighborIDs": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											}
+										},
+										"type": "object"
+									}
+								]
 							}
 						}
 					}
@@ -1150,7 +1172,22 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_Pick_Area.name-or-locationDescription-or-plantId__"
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/Partial_Pick_Area.name-or-locationDescription-or-plantId__"
+									},
+									{
+										"properties": {
+											"neighborIDs": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											}
+										},
+										"type": "object"
+									}
+								]
 							}
 						}
 					}
