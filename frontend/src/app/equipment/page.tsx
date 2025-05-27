@@ -274,6 +274,7 @@ export default function EquipmentPage() {
       <Modal
         title={editingEquipment ? "Edit Equipment" : "Add Equipment"}
         open={isModalVisible}
+        afterOpenChange={() => form.resetFields(["areaIDs"])}
         onCancel={() => {
           setIsModalVisible(false);
           form.resetFields();
@@ -343,6 +344,7 @@ export default function EquipmentPage() {
           <Form.Item
             name="areaIDs"
             label="Areas"
+            initialValue={editingEquipment?.areas?.map((area) => area.id) || []}
             rules={[
               { required: true, message: "Please select at least one area!" },
             ]}
