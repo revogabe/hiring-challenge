@@ -202,9 +202,6 @@
 						},
 						"type": "array"
 					},
-					"maintenanceId": {
-						"type": "string"
-					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -222,7 +219,6 @@
 					"serialNumber",
 					"installationDate",
 					"equipmentId",
-					"maintenanceId",
 					"createdAt",
 					"updatedAt"
 				],
@@ -351,9 +347,6 @@
 							"$ref": "#/components/schemas/Maintenance"
 						},
 						"type": "array"
-					},
-					"maintenanceId": {
-						"type": "string"
 					}
 				},
 				"required": [
@@ -362,8 +355,7 @@
 					"manufacturer",
 					"serialNumber",
 					"installationDate",
-					"equipmentId",
-					"maintenanceId"
+					"equipmentId"
 				],
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
@@ -401,9 +393,6 @@
 							"$ref": "#/components/schemas/Maintenance"
 						},
 						"type": "array"
-					},
-					"maintenanceId": {
-						"type": "string"
 					}
 				},
 				"type": "object",
@@ -1107,8 +1096,12 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"type": "string",
-								"format": "date-time"
+								"properties": {
+									"completedDate": {
+										"type": "string"
+									}
+								},
+								"type": "object"
 							}
 						}
 					}

@@ -23,15 +23,14 @@ export class MaintenanceService {
 
   public async findAll(): Promise<Maintenance[]> {
     return this.maintenanceRepository.find({
-      relations: ["part", "part.equipment", "equipment"],
+      relations: ["part", "part.equipment"],
     });
   }
 
   public async findAllFuture(): Promise<Maintenance[]> {
-    // Find all maintenance records with next due date in the future or without a completed date
     return this.maintenanceRepository.find({
       where: [{ nextDueDate: MoreThan(new Date()) }, { isCompleted: false }],
-      relations: ["part", "part.equipment", "equipment"],
+      relations: ["part", "part.equipment"],
       order: {
         nextDueDate: "ASC",
       },
@@ -41,7 +40,7 @@ export class MaintenanceService {
   public async findById(id: string): Promise<Maintenance> {
     const maintenance = await this.maintenanceRepository.findOne({
       where: { id },
-      relations: ["part", "part.equipment", "equipment"],
+      relations: ["part", "part.equipment"],
     });
 
     if (!maintenance) {
@@ -63,7 +62,6 @@ export class MaintenanceService {
     >
   ): Promise<Maintenance> {
     try {
-      // Calculate the next due date based on frequency and reference
       const nextDueDate = await this.calculateNextDueDate(data);
 
       const maintenance = this.maintenanceRepository.create({
@@ -93,21 +91,12 @@ export class MaintenanceService {
     try {
       const maintenance = await this.findById(id);
 
-      // Recalculate next due date if frequency or reference changed
-      if (
-        data.frequencyType !== undefined ||
-        data.frequencyValue !== undefined ||
-        data.referenceType !== undefined ||
-        data.specificDate !== undefined ||
-        data.partId !== undefined
-      ) {
-        const updatedData = {
-          ...maintenance,
-          ...data,
-        };
+      const updatedData = {
+        ...maintenance,
+        ...data,
+      };
 
-        data.nextDueDate = await this.calculateNextDueDate(updatedData);
-      }
+      data.nextDueDate = await this.calculateNextDueDate(updatedData);
 
       Object.assign(maintenance, data);
       return await this.maintenanceRepository.save(maintenance);
@@ -135,14 +124,13 @@ export class MaintenanceService {
 
   public async markComplete(
     id: string,
-    completedDate: Date = new Date()
+    data: { completedDate?: string | Date }
   ): Promise<Maintenance> {
     const maintenance = await this.findById(id);
 
     maintenance.isCompleted = true;
-    maintenance.completedDate = completedDate;
+    maintenance.completedDate = new Date(data.completedDate || new Date());
 
-    // Schedule next maintenance based on the completion date and frequency
     if (maintenance.frequencyType !== MaintenanceFrequencyType.SPECIFIC_DATE) {
       const nextMaintenanceData = {
         title: maintenance.title,
@@ -154,7 +142,6 @@ export class MaintenanceService {
         isCompleted: false,
       };
 
-      // Create next maintenance instance
       await this.create(nextMaintenanceData);
     }
 
@@ -171,107 +158,84 @@ export class MaintenanceService {
       return new Date(data.specificDate);
     }
 
-    // Get reference date (either part installation date or equipment operation date)
-    let referenceDate: Date;
-
-    if (
-      data.referenceType === MaintenanceReferenceType.PART_INSTALLATION &&
-      data.partId
-    ) {
-      const part = await this.partRepository.findOne({
-        where: { id: data.partId },
-      });
-      if (!part) {
-        throw new InvalidForeignKeyError("Invalid part ID");
-      }
-      referenceDate = part.installationDate;
-    } else if (
-      data.referenceType === MaintenanceReferenceType.EQUIPMENT_OPERATION &&
-      data.partId
-    ) {
-      const part = await this.partRepository.findOne({
-        where: { id: data.partId },
-        relations: ["equipment"],
-      });
-      if (!part) {
-        throw new InvalidForeignKeyError("Invalid part ID");
-      }
-      if (!part.equipment) {
-        throw new InvalidForeignKeyError(
-          "Part is not associated with any equipment"
-        );
-      }
-      referenceDate = part.equipment.initialOperationsDate;
-    } else if (data.partId) {
-      // Default to part installation date if available
-      const part = await this.partRepository.findOne({
-        where: { id: data.partId },
-      });
-      if (!part) {
-        throw new InvalidForeignKeyError("Invalid part ID");
-      }
-      referenceDate = part.installationDate;
-    } else if (data.partId) {
-      // Default to equipment operation date if available
-      const part = await this.partRepository.findOne({
-        where: { id: data.partId },
-        relations: ["equipment"],
-      });
-      if (!part) {
-        throw new InvalidForeignKeyError("Invalid equipment ID");
-      }
-      if (!part.equipment) {
-        throw new InvalidForeignKeyError(
-          "Part is not associated with any equipment"
-        );
-      }
-      referenceDate = part.equipment.initialOperationsDate;
-    } else {
-      throw new InvalidDataError("Missing part ID or equipment ID");
-    }
-
-    // Calculate next due date based on frequency
-    const frequencyValue = data.frequencyValue || 0;
     const today = new Date();
-    let nextDueDate: Date;
+    const referenceDate = await this.getMaintenanceReferenceDate(data);
+    const frequencyValue = Number(data.frequencyValue || 0);
 
-    switch (data.frequencyType) {
-      case MaintenanceFrequencyType.DAYS:
-        nextDueDate = addDays(referenceDate, Number(frequencyValue));
-        break;
-      case MaintenanceFrequencyType.WEEKS:
-        nextDueDate = addWeeks(referenceDate, Number(frequencyValue));
-        break;
-      case MaintenanceFrequencyType.MONTHS:
-        nextDueDate = addMonths(referenceDate, Number(frequencyValue));
-        break;
-      case MaintenanceFrequencyType.YEARS:
-        nextDueDate = addYears(referenceDate, Number(frequencyValue));
-        break;
-      default:
-        nextDueDate = addMonths(referenceDate, 3); // Default to 3 months if no frequency specified
-    }
+    let nextDueDate = this.calculateInitialDueDate(
+      referenceDate,
+      data.frequencyType,
+      frequencyValue
+    );
 
-    // If the calculated date is in the past, add the interval again until we get a future date
     while (nextDueDate < today) {
-      switch (data.frequencyType) {
-        case MaintenanceFrequencyType.DAYS:
-          nextDueDate = addDays(nextDueDate, Number(frequencyValue));
-          break;
-        case MaintenanceFrequencyType.WEEKS:
-          nextDueDate = addWeeks(nextDueDate, Number(frequencyValue));
-          break;
-        case MaintenanceFrequencyType.MONTHS:
-          nextDueDate = addMonths(nextDueDate, Number(frequencyValue));
-          break;
-        case MaintenanceFrequencyType.YEARS:
-          nextDueDate = addYears(nextDueDate, Number(frequencyValue));
-          break;
-        default:
-          nextDueDate = addMonths(nextDueDate, 3);
-      }
+      nextDueDate = this.addTimeByFrequencyType(
+        nextDueDate,
+        data.frequencyType,
+        frequencyValue
+      );
     }
 
     return nextDueDate;
+  }
+
+  private async getMaintenanceReferenceDate(
+    data: Partial<Maintenance>
+  ): Promise<Date> {
+    if (!data.partId) {
+      throw new InvalidDataError("Missing part ID");
+    }
+
+    const partQuery: { where: { id: string }; relations?: string[] } = {
+      where: { id: data.partId },
+    };
+
+    if (data.referenceType === MaintenanceReferenceType.EQUIPMENT_OPERATION) {
+      partQuery.relations = ["equipment"];
+    }
+
+    const part = await this.partRepository.findOne(partQuery);
+
+    if (!part) {
+      throw new InvalidForeignKeyError("Invalid part ID");
+    }
+
+    if (data.referenceType === MaintenanceReferenceType.EQUIPMENT_OPERATION) {
+      if (!part.equipment) {
+        throw new InvalidForeignKeyError(
+          "Part is not associated with any equipment"
+        );
+      }
+      return part.equipment.initialOperationsDate;
+    }
+
+    return part.installationDate;
+  }
+
+  private calculateInitialDueDate(
+    referenceDate: Date,
+    frequencyType?: MaintenanceFrequencyType,
+    frequencyValue: number = 0
+  ): Date {
+    switch (frequencyType) {
+      case MaintenanceFrequencyType.DAYS:
+        return addDays(referenceDate, frequencyValue);
+      case MaintenanceFrequencyType.WEEKS:
+        return addWeeks(referenceDate, frequencyValue);
+      case MaintenanceFrequencyType.MONTHS:
+        return addMonths(referenceDate, frequencyValue);
+      case MaintenanceFrequencyType.YEARS:
+        return addYears(referenceDate, frequencyValue);
+      default:
+        return addMonths(referenceDate, 3);
+    }
+  }
+
+  private addTimeByFrequencyType(
+    date: Date,
+    frequencyType?: MaintenanceFrequencyType,
+    frequencyValue: number = 0
+  ): Date {
+    return this.calculateInitialDueDate(date, frequencyType, frequencyValue);
   }
 }

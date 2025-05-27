@@ -32,7 +32,7 @@ import {
 } from "@ant-design/icons";
 import type { TabsProps, TableProps } from "antd";
 import dayjs from "dayjs";
-import { Calendar } from "./Calendar";
+import { Calendar } from "@/components/Calendar";
 
 export default function MaintenancePage() {
   const [form] = Form.useForm();
@@ -182,19 +182,6 @@ export default function MaintenancePage() {
       },
     },
     {
-      title: "Área",
-      key: "area",
-      render: (_, record) => {
-        if (
-          record.part?.equipment?.areas &&
-          record.part?.equipment.areas.length > 0
-        ) {
-          return record.part?.equipment.areas[0].name;
-        }
-        return "N/A";
-      },
-    },
-    {
       title: "Ações",
       key: "actions",
       render: (_, record) => (
@@ -220,7 +207,11 @@ export default function MaintenancePage() {
                 Modal.confirm({
                   title: "Confirmar conclusão",
                   content: "Deseja marcar esta manutenção como concluída?",
-                  onOk: () => completeMutation.mutate({ id: record.id }),
+                  onOk: () =>
+                    completeMutation.mutate({
+                      id: record.id,
+                      completedDate: new Date(),
+                    }),
                 });
               }}
             >

@@ -45,6 +45,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       icon: <SettingOutlined />,
       label: "Parts",
     },
+    {
+      key: "/maintenance",
+      icon: <ToolOutlined />,
+      label: "Maintenance",
+    },
   ];
 
   return (

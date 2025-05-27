@@ -47,9 +47,6 @@ export class Part {
   @OneToMany(() => Maintenance, (maintenance) => maintenance.part)
   maintenance?: Maintenance[];
 
-  @Column()
-  maintenanceId!: string;
-
   @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 

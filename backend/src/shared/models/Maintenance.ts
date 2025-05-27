@@ -63,4 +63,5 @@ export class Maintenance {
 
   @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
   updatedAt!: Date;
+  maintenance: { completedDate: Date };
 }

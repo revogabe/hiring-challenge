@@ -45,7 +45,8 @@ export class PartController extends Controller {
 
   @Post()
   public async createPart(
-    @Body() requestBody: Omit<Part, "id" | "createdAt" | "updatedAt">
+    @Body()
+    requestBody: Omit<Part, "id" | "createdAt" | "updatedAt">
   ): Promise<Part> {
     try {
       return await this.partService.create(requestBody);

@@ -8,7 +8,7 @@ import { useLocale } from "@react-aria/i18n";
 import { Maintenance } from "@/services/api";
 import dayjs from "dayjs";
 import { Card, Badge, Modal, List, Typography } from "antd";
-import styles from "./Calendar.module.css";
+import styles from "../styles/calendar.module.css";
 
 const { Text } = Typography;
 
@@ -36,12 +36,32 @@ const CalendarCell = ({ date, maintenances }: CalendarCellProps) => {
       onClick={() => dateMaintenances.length > 0 && setIsModalOpen(true)}
     >
       <div className={styles.cellDate}>{date.day}</div>
-      {dateMaintenances.length > 0 && (
-        <Badge
-          count={dateMaintenances.length}
-          style={{ backgroundColor: "#1677ff" }}
-        />
-      )}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "end",
+          justifyContent: "end",
+          padding: "12px",
+          background: "transparent",
+        }}
+      >
+        {dateMaintenances.length > 0 && (
+          <Badge
+            count={1}
+            style={{
+              backgroundColor: "#1677ff",
+              right: 0,
+              bottom: 0,
+              position: "absolute",
+              transform: "translate(50%, 50%)",
+              zIndex: 1,
+            }}
+          />
+        )}
+      </div>
 
       <Modal
         title={`Manutenções de ${dayjs(dateStr).format("DD/MM/YYYY")}`}

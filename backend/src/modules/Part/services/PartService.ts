@@ -31,7 +31,7 @@ export class PartService {
   }
 
   public async create(
-    data: Omit<Part, "id" | "createdAt" | "updatedAt">
+    data: Partial<Omit<Part, "id" | "createdAt" | "updatedAt">>
   ): Promise<Part> {
     try {
       const part = this.partRepository.create(data);

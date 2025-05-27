@@ -106,7 +106,7 @@ export class MaintenanceController extends Controller {
   @Put("{maintenanceId}/complete")
   public async completeMaintenance(
     @Path() maintenanceId: string,
-    @Body() requestBody: Date
+    @Body() requestBody: { completedDate?: string }
   ): Promise<Maintenance> {
     try {
       return await this.maintenanceService.markComplete(
