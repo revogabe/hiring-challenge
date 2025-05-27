@@ -117,6 +117,7 @@ const models: TsoaRoute.Models = {
             "nextDueDate": {"dataType":"datetime"},
             "createdAt": {"dataType":"datetime","required":true},
             "updatedAt": {"dataType":"datetime","required":true},
+            "maintenance": {"dataType":"nestedObjectLiteral","nestedProperties":{"completedDate":{"dataType":"datetime","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -153,7 +154,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_Omit_Maintenance.id-or-createdAt-or-updatedAt__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"frequencyType":{"ref":"MaintenanceFrequencyType"},"frequencyValue":{"dataType":"string"},"title":{"dataType":"string"},"description":{"dataType":"string"},"referenceType":{"ref":"MaintenanceReferenceType"},"partId":{"dataType":"string"},"specificDate":{"dataType":"datetime"},"isCompleted":{"dataType":"boolean"},"completedDate":{"dataType":"datetime"},"part":{"ref":"Part"},"nextDueDate":{"dataType":"datetime"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"maintenance":{"dataType":"nestedObjectLiteral","nestedProperties":{"completedDate":{"dataType":"datetime","required":true}}},"frequencyType":{"ref":"MaintenanceFrequencyType"},"frequencyValue":{"dataType":"string"},"title":{"dataType":"string"},"description":{"dataType":"string"},"referenceType":{"ref":"MaintenanceReferenceType"},"partId":{"dataType":"string"},"specificDate":{"dataType":"datetime"},"isCompleted":{"dataType":"boolean"},"completedDate":{"dataType":"datetime"},"part":{"ref":"Part"},"nextDueDate":{"dataType":"datetime"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_Equipment.Exclude_keyofEquipment.id-or-createdAt-or-updatedAt__": {

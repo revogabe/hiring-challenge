@@ -273,6 +273,18 @@
 					"updatedAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"maintenance": {
+						"properties": {
+							"completedDate": {
+								"type": "string",
+								"format": "date-time"
+							}
+						},
+						"required": [
+							"completedDate"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -285,7 +297,8 @@
 					"part",
 					"partId",
 					"createdAt",
-					"updatedAt"
+					"updatedAt",
+					"maintenance"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -431,6 +444,18 @@
 			},
 			"Partial_Omit_Maintenance.id-or-createdAt-or-updatedAt__": {
 				"properties": {
+					"maintenance": {
+						"properties": {
+							"completedDate": {
+								"type": "string",
+								"format": "date-time"
+							}
+						},
+						"required": [
+							"completedDate"
+						],
+						"type": "object"
+					},
 					"frequencyType": {
 						"$ref": "#/components/schemas/MaintenanceFrequencyType"
 					},
