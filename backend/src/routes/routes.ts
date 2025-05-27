@@ -4,15 +4,15 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { PlantController } from './../controllers/PlantController';
+import { PlantController } from './../modules/Plant/controllers/PlantController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { PartController } from './../controllers/PartController';
+import { PartController } from './../modules/Part/controllers/PartController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { NeighborController } from './../controllers/NeighborController';
+import { EquipmentController } from './../modules/Equipment/controllers/EquipmentController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { EquipmentController } from './../controllers/EquipmentController';
+import { NeighborController } from './../modules/Area/controllers/NeighborController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AreaController } from './../controllers/AreaController';
+import { AreaController } from './../modules/Area/controllers/AreaController';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -43,7 +43,6 @@ const models: TsoaRoute.Models = {
             "plantId": {"dataType":"string","required":true},
             "equipment": {"dataType":"array","array":{"dataType":"refObject","ref":"Equipment"}},
             "neighbors": {"dataType":"array","array":{"dataType":"refObject","ref":"Area"}},
-            "neighborIDs": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "updatedAt": {"dataType":"datetime","required":true},
         },
@@ -455,98 +454,6 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsNeighborController_addNeighbor: Record<string, TsoaRoute.ParameterSchema> = {
-                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
-                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIds":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
-        };
-        app.post('/neighbors/:areaId',
-            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
-            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.addNeighbor)),
-
-            async function NeighborController_addNeighbor(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_addNeighbor, request, response });
-
-                const controller = new NeighborController();
-
-              await templateService.apiHandler({
-                methodName: 'addNeighbor',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsNeighborController_removeNeighbor: Record<string, TsoaRoute.ParameterSchema> = {
-                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
-                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIds":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
-        };
-        app.delete('/neighbors/:areaId',
-            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
-            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.removeNeighbor)),
-
-            async function NeighborController_removeNeighbor(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_removeNeighbor, request, response });
-
-                const controller = new NeighborController();
-
-              await templateService.apiHandler({
-                methodName: 'removeNeighbor',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsNeighborController_getNeighbors: Record<string, TsoaRoute.ParameterSchema> = {
-                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
-        };
-        app.get('/neighbors/:areaId',
-            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
-            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.getNeighbors)),
-
-            async function NeighborController_getNeighbors(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_getNeighbors, request, response });
-
-                const controller = new NeighborController();
-
-              await templateService.apiHandler({
-                methodName: 'getNeighbors',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEquipmentController_getEquipment: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/equipment',
@@ -686,6 +593,98 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'deleteEquipment',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNeighborController_addNeighbor: Record<string, TsoaRoute.ParameterSchema> = {
+                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIds":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
+        };
+        app.post('/neighbors/:areaId',
+            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
+            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.addNeighbor)),
+
+            async function NeighborController_addNeighbor(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_addNeighbor, request, response });
+
+                const controller = new NeighborController();
+
+              await templateService.apiHandler({
+                methodName: 'addNeighbor',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNeighborController_removeNeighbor: Record<string, TsoaRoute.ParameterSchema> = {
+                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"neighborIds":{"dataType":"array","array":{"dataType":"string"},"required":true}}},
+        };
+        app.delete('/neighbors/:areaId',
+            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
+            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.removeNeighbor)),
+
+            async function NeighborController_removeNeighbor(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_removeNeighbor, request, response });
+
+                const controller = new NeighborController();
+
+              await templateService.apiHandler({
+                methodName: 'removeNeighbor',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNeighborController_getNeighbors: Record<string, TsoaRoute.ParameterSchema> = {
+                areaId: {"in":"path","name":"areaId","required":true,"dataType":"string"},
+        };
+        app.get('/neighbors/:areaId',
+            ...(fetchMiddlewares<RequestHandler>(NeighborController)),
+            ...(fetchMiddlewares<RequestHandler>(NeighborController.prototype.getNeighbors)),
+
+            async function NeighborController_getNeighbors(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNeighborController_getNeighbors, request, response });
+
+                const controller = new NeighborController();
+
+              await templateService.apiHandler({
+                methodName: 'getNeighbors',
                 controller,
                 response,
                 next,

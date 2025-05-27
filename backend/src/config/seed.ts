@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
-import { Plant } from "../models/Plant";
-import { Area } from "../models/Area";
-import { Equipment } from "../models/Equipment";
-import { Part, PartType } from "../models/Part";
+import { Plant } from "../shared/models/Plant";
+import { Area } from "../shared/models/Area";
+import { Equipment } from "../shared/models/Equipment";
+import { Part, PartType } from "../shared/models/Part";
 
 export async function seedDatabase(dataSource: DataSource) {
   const plantCount = await dataSource.getRepository(Plant).count();

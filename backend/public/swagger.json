@@ -72,12 +72,6 @@
 						},
 						"type": "array"
 					},
-					"neighborIDs": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -92,7 +86,6 @@
 					"name",
 					"locationDescription",
 					"plantId",
-					"neighborIDs",
 					"createdAt",
 					"updatedAt"
 				],
@@ -724,156 +717,6 @@
 				]
 			}
 		},
-		"/neighbors/{areaId}": {
-			"post": {
-				"operationId": "AddNeighbor",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Neighbor"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "areaId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"neighborIds": {
-										"items": {
-											"type": "string"
-										},
-										"type": "array"
-									}
-								},
-								"required": [
-									"neighborIds"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "RemoveNeighbor",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Neighbor"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "areaId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"neighborIds": {
-										"items": {
-											"type": "string"
-										},
-										"type": "array"
-									}
-								},
-								"required": [
-									"neighborIds"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			},
-			"get": {
-				"operationId": "GetNeighbors",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/Area"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Neighbor"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "areaId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/equipment": {
 			"get": {
 				"operationId": "GetEquipment",
@@ -1031,6 +874,156 @@
 					{
 						"in": "path",
 						"name": "equipmentId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/neighbors/{areaId}": {
+			"post": {
+				"operationId": "AddNeighbor",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Neighbor"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "areaId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"neighborIds": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"neighborIds"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveNeighbor",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Neighbor"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "areaId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"neighborIds": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"neighborIds"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetNeighbors",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Area"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Neighbor"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "areaId",
 						"required": true,
 						"schema": {
 							"type": "string"
