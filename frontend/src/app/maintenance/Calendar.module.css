@@ -1,0 +1,78 @@
+.calendarContainer {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.calendarHeader button {
+  background-color: #1677ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.calendarWeekday {
+  text-align: center;
+  font-weight: bold;
+  padding: 8px 0;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.calendarCell {
+  position: relative;
+  height: 100px;
+  background-color: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.calendarCell:hover {
+  background-color: #f0f7ff;
+}
+
+.cellDate {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-weight: bold;
+}
+
+.calendarLegend {
+  margin-top: 20px;
+}
+
+.maintenanceList {
+  margin-top: 16px;
+}
+
+.maintenanceItem {
+  margin-bottom: 8px;
+}
+
+.maintenanceDate {
+  font-weight: bold;
+  margin-right: 8px;
+}

@@ -152,6 +152,23 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MaintenanceFrequencyType": {
+				"enum": [
+					"days",
+					"weeks",
+					"months",
+					"years",
+					"specific_date"
+				],
+				"type": "string"
+			},
+			"MaintenanceReferenceType": {
+				"enum": [
+					"part_installation",
+					"equipment_operation"
+				],
+				"type": "string"
+			},
 			"Part": {
 				"properties": {
 					"id": {
@@ -179,6 +196,15 @@
 					"equipmentId": {
 						"type": "string"
 					},
+					"maintenance": {
+						"items": {
+							"$ref": "#/components/schemas/Maintenance"
+						},
+						"type": "array"
+					},
+					"maintenanceId": {
+						"type": "string"
+					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
@@ -196,6 +222,72 @@
 					"serialNumber",
 					"installationDate",
 					"equipmentId",
+					"maintenanceId",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Maintenance": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"frequencyType": {
+						"$ref": "#/components/schemas/MaintenanceFrequencyType"
+					},
+					"frequencyValue": {
+						"type": "string"
+					},
+					"referenceType": {
+						"$ref": "#/components/schemas/MaintenanceReferenceType"
+					},
+					"specificDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isCompleted": {
+						"type": "boolean"
+					},
+					"completedDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"part": {
+						"$ref": "#/components/schemas/Part"
+					},
+					"partId": {
+						"type": "string"
+					},
+					"nextDueDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"frequencyType",
+					"frequencyValue",
+					"referenceType",
+					"isCompleted",
+					"part",
+					"partId",
 					"createdAt",
 					"updatedAt"
 				],
@@ -253,6 +345,15 @@
 					},
 					"equipmentId": {
 						"type": "string"
+					},
+					"maintenance": {
+						"items": {
+							"$ref": "#/components/schemas/Maintenance"
+						},
+						"type": "array"
+					},
+					"maintenanceId": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -261,7 +362,8 @@
 					"manufacturer",
 					"serialNumber",
 					"installationDate",
-					"equipmentId"
+					"equipmentId",
+					"maintenanceId"
 				],
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
@@ -293,6 +395,88 @@
 					},
 					"equipmentId": {
 						"type": "string"
+					},
+					"maintenance": {
+						"items": {
+							"$ref": "#/components/schemas/Maintenance"
+						},
+						"type": "array"
+					},
+					"maintenanceId": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Pick_Maintenance.frequencyType-or-frequencyValue-or-title-or-description-or-referenceType-or-partId_": {
+				"properties": {
+					"frequencyType": {
+						"$ref": "#/components/schemas/MaintenanceFrequencyType"
+					},
+					"frequencyValue": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"referenceType": {
+						"$ref": "#/components/schemas/MaintenanceReferenceType"
+					},
+					"partId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"frequencyType",
+					"frequencyValue",
+					"title",
+					"referenceType",
+					"partId"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Partial_Omit_Maintenance.id-or-createdAt-or-updatedAt__": {
+				"properties": {
+					"frequencyType": {
+						"$ref": "#/components/schemas/MaintenanceFrequencyType"
+					},
+					"frequencyValue": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"referenceType": {
+						"$ref": "#/components/schemas/MaintenanceReferenceType"
+					},
+					"partId": {
+						"type": "string"
+					},
+					"specificDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isCompleted": {
+						"type": "boolean"
+					},
+					"completedDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"part": {
+						"$ref": "#/components/schemas/Part"
+					},
+					"nextDueDate": {
+						"type": "string",
+						"format": "date-time"
 					}
 				},
 				"type": "object",
@@ -715,6 +899,220 @@
 						}
 					}
 				]
+			}
+		},
+		"/maintenance": {
+			"get": {
+				"operationId": "GetMaintenances",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Maintenance"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateMaintenance",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Maintenance"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Pick_Maintenance.frequencyType-or-frequencyValue-or-title-or-description-or-referenceType-or-partId_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/maintenance/future": {
+			"get": {
+				"operationId": "GetFutureMaintenances",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Maintenance"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/maintenance/{maintenanceId}": {
+			"get": {
+				"operationId": "GetMaintenance",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Maintenance"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "maintenanceId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateMaintenance",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Maintenance"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "maintenanceId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_Omit_Maintenance.id-or-createdAt-or-updatedAt__"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteMaintenance",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "maintenanceId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/maintenance/{maintenanceId}/complete": {
+			"put": {
+				"operationId": "CompleteMaintenance",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Maintenance"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Maintenance"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "maintenanceId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string",
+								"format": "date-time"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/equipment": {

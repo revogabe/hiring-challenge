@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import { AppDataSource } from "./config/database";
 import { RegisterRoutes } from "./routes/routes";
 import * as swaggerJson from "../public/swagger.json";
-import { seedDatabase } from "./config/seed";
+// import { seedDatabase } from "./config/seed";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -28,7 +28,7 @@ AppDataSource.initialize()
     console.log("Data Source has been initialized!");
 
     // Seed database with demo data
-    await seedDatabase(AppDataSource);
+    // await seedDatabase(AppDataSource);
 
     // Start server
     app.listen(port, () => {
