@@ -42,6 +42,7 @@ describe("PartService", () => {
           serialNumber: "123456",
           installationDate: new Date(),
           equipmentId: "equipment1",
+          maintenanceId: "maintenance1",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -67,6 +68,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -100,6 +102,7 @@ describe("PartService", () => {
       serialNumber: "123456",
       installationDate: new Date(),
       equipmentId: "equipment1",
+      maintenanceId: "maintenance1",
     };
 
     it("should create and return a new part", async () => {
@@ -190,6 +193,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -220,6 +224,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -245,6 +250,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -270,6 +276,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -296,6 +303,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -324,6 +332,7 @@ describe("PartService", () => {
         serialNumber: "123456",
         installationDate: new Date(),
         equipmentId: "equipment1",
+        maintenanceId: "maintenance1",
         createdAt: new Date(),
         updatedAt: new Date(),
       };

@@ -59,6 +59,36 @@ export interface Part {
   updatedAt: string;
 }
 
+export enum MaintenanceFrequencyType {
+  DAYS = "days",
+  WEEKS = "weeks",
+  MONTHS = "months",
+  YEARS = "years",
+  SPECIFIC_DATE = "specific_date",
+}
+
+export enum MaintenanceReferenceType {
+  PART_INSTALLATION = "part_installation",
+  EQUIPMENT_OPERATION = "equipment_operation",
+}
+
+export interface Maintenance {
+  id: string;
+  title: string;
+  description?: string;
+  frequencyType: MaintenanceFrequencyType;
+  frequencyValue: string;
+  referenceType: MaintenanceReferenceType;
+  specificDate?: string;
+  isCompleted: boolean;
+  completedDate?: string;
+  partId?: string;
+  part?: Part;
+  nextDueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const plantApi = {
   getAll: () => api.get<Plant[]>("/plants"),
   getById: (id: string) => api.get<Plant>(`/plants/${id}`),
@@ -105,4 +135,28 @@ export const partApi = {
     data: Partial<Omit<Part, "id" | "createdAt" | "updatedAt">>
   ) => api.put<Part>(`/parts/${id}`, data),
   delete: (id: string) => api.delete(`/parts/${id}`),
+};
+
+export const maintenanceApi = {
+  getAll: () => api.get<Maintenance[]>("/maintenance"),
+  getFuture: () => api.get<Maintenance[]>("/maintenance/future"),
+  getById: (id: string) => api.get<Maintenance>(`/maintenance/${id}`),
+  create: (
+    data: Pick<
+      Maintenance,
+      | "frequencyType"
+      | "frequencyValue"
+      | "title"
+      | "description"
+      | "referenceType"
+      | "partId"
+    >
+  ) => api.post<Maintenance>("/maintenance", data),
+  update: (
+    id: string,
+    data: Partial<Omit<Maintenance, "id" | "createdAt" | "updatedAt">>
+  ) => api.put<Maintenance>(`/maintenance/${id}`, data),
+  complete: (id: string, completedDate?: Date) =>
+    api.put<Maintenance>(`/maintenance/${id}/complete`, { completedDate }),
+  delete: (id: string) => api.delete(`/maintenance/${id}`),
 };

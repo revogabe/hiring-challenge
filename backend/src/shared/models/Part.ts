@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { Equipment } from "./Equipment";
+import { Maintenance } from "./Maintenance";
 
 export enum PartType {
   ELECTRIC = "electric",
@@ -36,6 +43,9 @@ export class Part {
 
   @Column()
   equipmentId!: string;
+
+  @OneToMany(() => Maintenance, (maintenance) => maintenance.part)
+  maintenance?: Maintenance[];
 
   @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
